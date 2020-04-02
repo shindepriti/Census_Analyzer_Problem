@@ -15,7 +15,7 @@ public class CensusAnalyzer {
             Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
             CsvToBeanBuilder<IndiaCensusCsvPojo>  csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
             csvToBeanBuilder.withType(IndiaCensusCsvPojo.class);
-            csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
+            csvToBeanBuilder.withThrowExceptions(false);
             CsvToBean<IndiaCensusCsvPojo> csvToBean = csvToBeanBuilder.build();
             Iterator<IndiaCensusCsvPojo> censusCsvIterator = csvToBean.iterator();
             Iterable<IndiaCensusCsvPojo> csvIterable=() -> censusCsvIterator;
@@ -23,6 +23,8 @@ public class CensusAnalyzer {
             return numberOfEnteries;
         } catch (IOException e) {
             throw new CensusAnalyzerException(CensusAnalyzerException.ExceptionType.CSV_FILE_PROBLEM, e.getMessage());
+        }catch (RuntimeException e) {
+            throw new CensusAnalyzerException(CensusAnalyzerException.ExceptionType.CSV_TEMPLATE_PROBLEM,e.getMessage());
         }
     }
 }
