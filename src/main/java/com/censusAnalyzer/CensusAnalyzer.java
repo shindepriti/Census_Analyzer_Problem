@@ -23,6 +23,8 @@ public class CensusAnalyzer {
             return numberOfEnteries;
         } catch (IOException e) {
             throw new CensusAnalyzerException(CensusAnalyzerException.ExceptionType.CSV_FILE_PROBLEM, e.getMessage());
+        }catch (RuntimeException e) {
+            throw new CensusAnalyzerException(CensusAnalyzerException.ExceptionType.CSV_TEMPLATE_PROBLEM,e.getMessage());
         }
     }
 }
