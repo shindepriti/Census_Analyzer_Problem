@@ -7,10 +7,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
 
-
 public class CensusAnalyzer {
 
-    public int loadCensusData(String csvFilePath)  {
+    public int loadCensusData(String csvFilePath) throws CensusAnalyzerException {
         try {
             Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
             CsvToBeanBuilder<IndiaCensusCsvPojo>  csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
@@ -25,8 +24,7 @@ public class CensusAnalyzer {
             }
             return numberOfEntries;
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new CensusAnalyzerException(CensusAnalyzerException.ExceptionType.CSV_FILE_PROBLEM,e.getMessage());
         }
-        return 0;
     }
 }
