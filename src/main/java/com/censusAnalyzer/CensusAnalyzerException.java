@@ -1,6 +1,5 @@
 package com.censusAnalyzer;
 
-
 public class CensusAnalyzerException extends Throwable {
     enum ExceptionType {
         CSV_FILE_PROBLEM,CSV_TEMPLATE_PROBLEM
