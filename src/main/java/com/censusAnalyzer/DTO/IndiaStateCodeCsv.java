@@ -1,5 +1,4 @@
 package com.censusAnalyzer.DTO;
-
 import com.opencsv.bean.CsvBindByName;
 
 public class IndiaStateCodeCsv {
