@@ -1,11 +1,12 @@
-package com.censusAnalyzer;
+package com.censusAnalyzer.Exception;
 
 public class CensusAnalyzerException extends Throwable {
-    enum ExceptionType {
+
+    public enum ExceptionType {
         CSV_FILE_PROBLEM,CSV_TEMPLATE_PROBLEM
     }
 
-    ExceptionType type;
+    public static ExceptionType type;
 
     public CensusAnalyzerException(ExceptionType type, String message) {
         super(message);

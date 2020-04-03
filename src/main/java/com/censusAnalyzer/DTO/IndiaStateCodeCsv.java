@@ -1,8 +1,8 @@
-package com.censusAnalyzer;
+package com.censusAnalyzer.DTO;
 
 import com.opencsv.bean.CsvBindByName;
 
-public class IndiaStateCodePojo {
+public class IndiaStateCodeCsv {
 
     @CsvBindByName(column = "SrNo",required = true)
     private int srNo;
