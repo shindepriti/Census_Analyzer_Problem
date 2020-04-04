@@ -3,6 +3,7 @@ package com.censusAnalyzer.Service;
 import com.censusAnalyzer.Builder.CsvBuilderFactory;
 import com.censusAnalyzer.Builder.IcsvBuilder;
 import com.censusAnalyzer.DTO.IndiaCensusCsv;
+import com.censusAnalyzer.DTO.IndiaCensusDto;
 import com.censusAnalyzer.DTO.IndiaStateCodeCsv;
 import com.censusAnalyzer.Exception.CensusAnalyzerException;
 import com.google.gson.Gson;
@@ -11,20 +12,29 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class CensusAnalyzer {
-    List<IndiaCensusCsv> censusCsvList = null;
-    List<IndiaStateCodeCsv> stateCodeCsv = null;
+    Map<String, IndiaCensusDto> censusMap;
+    List<IndiaCensusDto> indiaCensusDtoList;
+
+    public CensusAnalyzer() {
+        censusMap = new HashMap<>();
+    }
+
     public int loadCensusData(String csvFilePath) throws CensusAnalyzerException {
         try {
             Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
             IcsvBuilder csvBuilder = CsvBuilderFactory.CsvBuilder();
-             censusCsvList = csvBuilder.getCsvFileList(reader,IndiaCensusCsv.class);
-            return censusCsvList.size();
+            Iterator<IndiaCensusCsv> censusCsvIterator = csvBuilder.getCsvFileIterator(reader,IndiaCensusCsv.class);
+            while (censusCsvIterator.hasNext()) {
+                IndiaCensusCsv indiaCensusCsv = censusCsvIterator.next();
+                censusMap.put(indiaCensusCsv.state,new IndiaCensusDto(indiaCensusCsv));
+            }
+            indiaCensusDtoList = censusMap.values().stream().collect(Collectors.toList());
+            return censusMap.size();
         } catch (IOException e) {
             throw new CensusAnalyzerException(CensusAnalyzerException.ExceptionType.CSV_FILE_PROBLEM, e.getMessage());
         }catch (RuntimeException e) {
@@ -36,8 +46,14 @@ public class CensusAnalyzer {
         try {
             Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
             IcsvBuilder csvBuilder = CsvBuilderFactory.CsvBuilder();
-           List<IndiaStateCodeCsv> stateCodeList = csvBuilder.getCsvFileList(reader,IndiaStateCodeCsv.class);
-            return stateCodeList.size();
+            Iterator<IndiaStateCodeCsv> stateCodeCSVIterator = csvBuilder.getCsvFileIterator(reader, IndiaStateCodeCsv.class);
+            while (stateCodeCSVIterator.hasNext()) {
+                IndiaStateCodeCsv indiaStateCodeCSV = stateCodeCSVIterator.next();
+                IndiaCensusDto indiaCensusDTO = censusMap.get(indiaStateCodeCSV.state);
+                if (indiaCensusDTO==null)
+                    continue;
+            }
+            return censusMap.size();
         } catch (IOException e) {
             throw new CensusAnalyzerException(CensusAnalyzerException.ExceptionType.CSV_FILE_PROBLEM, e.getMessage());
         } catch (RuntimeException e) {
@@ -52,47 +68,27 @@ public class CensusAnalyzer {
     }
 
     public String getStateWiseSortedCensusData(String csvFilePath) throws CensusAnalyzerException {
-        if(censusCsvList.size()==0 || censusCsvList==null)
+        if(indiaCensusDtoList.size()==0 || indiaCensusDtoList==null)
             throw new CensusAnalyzerException(CensusAnalyzerException.ExceptionType.NO_CENSUS_DATA,"No Data");
-        Comparator<IndiaCensusCsv> indiaCensusCsvComparator = Comparator.comparing(census -> census.state);
+        Comparator<IndiaCensusDto> indiaCensusCsvComparator = Comparator.comparing(census -> census.state);
         this.sort(indiaCensusCsvComparator);
-        String sortedCensusJson = new Gson().toJson(censusCsvList);
-        return sortedCensusJson;
-    }
-    public String getStateCodeWiseSortedData(String csvFilePath) throws CensusAnalyzerException {
-        if(censusCsvList.size()==0 ||  censusCsvList==null)
-            throw new CensusAnalyzerException(CensusAnalyzerException.ExceptionType.NO_CENSUS_DATA,"No Data");
-        Comparator<IndiaStateCodeCsv> indiaStateCodeCsvComparator = Comparator.comparing(census -> census.stateCode);
-        this.sorting(indiaStateCodeCsvComparator);
-        String sortedCensusJson = new Gson().toJson(censusCsvList);
+        String sortedCensusJson = new Gson().toJson(indiaCensusDtoList);
         return sortedCensusJson;
     }
 
-    private void sort(Comparator<IndiaCensusCsv> indiaCensusCsvComparator) {
-        for (int i = 0; i < censusCsvList.size()-1; i++){
-            for (int j=0; j < censusCsvList.size()-i-1; j++){
-                IndiaCensusCsv census1 = censusCsvList.get(j);
-                IndiaCensusCsv census2 = censusCsvList.get(j+1);
+    private void sort(Comparator<IndiaCensusDto> indiaCensusCsvComparator) {
+        for (int i = 0; i < indiaCensusDtoList.size()-1; i++){
+            for (int j=0; j < indiaCensusDtoList.size()-i-1; j++){
+                IndiaCensusDto census1 = indiaCensusDtoList.get(j);
+                IndiaCensusDto census2 = indiaCensusDtoList.get(j+1);
                 if (indiaCensusCsvComparator.compare(census1,census2)>0){
-                    censusCsvList.set(j,census2);
-                    censusCsvList.set(j+1,census1);
+                    indiaCensusDtoList.set(j,census2);
+                    indiaCensusDtoList.set(j+1,census1);
                 }
             }
         }
     }
 
-    private void sorting(Comparator<IndiaStateCodeCsv> indiaStateCodeCsvComparator) {
-        for (int i = 0; i < stateCodeCsv.size()-1; i++){
-            for (int j=0; j < stateCodeCsv.size()-i-1; j++){
-               IndiaStateCodeCsv census1 = stateCodeCsv.get(j);
-               IndiaStateCodeCsv census2 = stateCodeCsv.get(j+1);
-                if (indiaStateCodeCsvComparator.compare(census1,census2)>0){
-                    stateCodeCsv.set(j, census2);
-                    stateCodeCsv.set(j+1,census1);
-                }
-            }
-        }
-    }
 
 
 }

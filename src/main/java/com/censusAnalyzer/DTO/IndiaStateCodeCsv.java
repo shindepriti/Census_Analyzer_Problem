@@ -4,10 +4,11 @@ import com.opencsv.bean.CsvBindByName;
 public class IndiaStateCodeCsv {
 
 
+
     @CsvBindByName(column = "SrNo",required = true)
     private int srNo;
     @CsvBindByName(column = "State",required = true)
-    private String state;
+    public String state;
     @CsvBindByName(column = "Name",required = true)
     private String name;
     @CsvBindByName(column = "TIN",required = true)

@@ -149,27 +149,4 @@ public class CensusAnalyzerTest {
         }
     }
 
-    @Test
-    public void givenIndiaStateCode_whenSorted_shouldReturnSortedDataStartCode() {
-        try {
-            censusAnalyzer.loadCensusData(INDIA_STATE_CODE_FILE_PATH);
-            String sortedCensusData = censusAnalyzer.getStateCodeWiseSortedData(INDIA_STATE_CODE_FILE_PATH);
-            IndiaStateCodeCsv[] codeCsv = new Gson().fromJson(sortedCensusData,IndiaStateCodeCsv[].class);
-            Assert.assertEquals("AN",codeCsv[0].stateCode);
-        } catch (CensusAnalyzerException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    public void givenIndiaStateCode_whenSorted_shouldReturnSortedDataEndCode() {
-        try {
-            censusAnalyzer.loadCensusData(INDIA_STATE_CODE_FILE_PATH);
-            String sortedStateCodeData = censusAnalyzer.getStateCodeWiseSortedData(INDIA_STATE_CODE_FILE_PATH);
-            IndiaStateCodeCsv[] codeCsv = new Gson().fromJson(sortedStateCodeData,IndiaStateCodeCsv[].class);
-            Assert.assertEquals("WB",codeCsv[36].stateCode);
-        } catch (CensusAnalyzerException e) {
-            e.printStackTrace();
-        }
-    }
 }
