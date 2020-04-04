@@ -1,6 +1,8 @@
-package com.censusAnalyzer.DTO;
+package com.censusAnalyzer.DAO;
 
-public class IndiaCensusDto {
+import com.censusAnalyzer.DTO.IndiaCensusCsv;
+
+public class IndiaCensusDao {
 
     public String state;
     public long population;
@@ -8,7 +10,7 @@ public class IndiaCensusDto {
     public long densityPerSqKm;
     public String  stateCode;
 
-    public IndiaCensusDto(IndiaCensusCsv indiaCensusCsv) {
+    public IndiaCensusDao(IndiaCensusCsv indiaCensusCsv) {
         state = indiaCensusCsv.state;
         population = indiaCensusCsv.population;
         areaInSqKm = indiaCensusCsv.areaInSqKm;

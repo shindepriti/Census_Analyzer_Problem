@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+
 public class CensusAnalyzerTest {
     private CensusAnalyzer censusAnalyzer;
     private static final String INDIA_CENSUS_CSV_FILE_PATH = "./src/test/resources/IndiaStateCensusData.csv";
@@ -149,4 +150,15 @@ public class CensusAnalyzerTest {
         }
     }
 
+    @Test
+    public void givenIndiaCensusData_whenSortedOnPopulation_shouldReturnResult() {
+        try {
+            censusAnalyzer.loadCensusData(INDIA_CENSUS_CSV_FILE_PATH);
+            String sortedCensusData = censusAnalyzer.getPopulationWiseSortedCensusData(INDIA_CENSUS_CSV_FILE_PATH);
+            IndiaCensusCsv[] censusCsv = new Gson().fromJson(sortedCensusData,IndiaCensusCsv[].class);
+            Assert.assertEquals("Sikkim",censusCsv[0].state);
+        } catch (CensusAnalyzerException e) {
+            e.printStackTrace();
+        }
+    }
 }
