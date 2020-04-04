@@ -1,7 +1,6 @@
 package com.censusAnalyzer;
 
 import com.censusAnalyzer.DTO.IndiaCensusCsv;
-import com.censusAnalyzer.DTO.IndiaStateCodeCsv;
 import com.censusAnalyzer.Exception.CensusAnalyzerException;
 import com.censusAnalyzer.Service.CensusAnalyzer;
 import com.google.gson.Gson;
@@ -80,8 +79,9 @@ public class CensusAnalyzerTest {
     @Test
     public void givenStateCodeCsvFile_returnCorrectRecord() {
         try {
+            censusAnalyzer.loadCensusData(INDIA_CENSUS_CSV_FILE_PATH);
            int numberOfRecord = censusAnalyzer.loadStateCodeData(INDIA_STATE_CODE_FILE_PATH);
-           Assert.assertEquals(37,numberOfRecord);
+           Assert.assertEquals(29,numberOfRecord);
         } catch (CensusAnalyzerException e) {
             e.printStackTrace();
         }
