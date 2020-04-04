@@ -6,6 +6,7 @@ public class IndiaCensusDto {
     public long population;
     public long areaInSqKm;
     public long densityPerSqKm;
+    public String  stateCode;
 
     public IndiaCensusDto(IndiaCensusCsv indiaCensusCsv) {
         state = indiaCensusCsv.state;
