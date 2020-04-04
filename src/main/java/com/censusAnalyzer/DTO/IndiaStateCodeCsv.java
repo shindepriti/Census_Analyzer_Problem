@@ -3,6 +3,7 @@ import com.opencsv.bean.CsvBindByName;
 
 public class IndiaStateCodeCsv {
 
+
     @CsvBindByName(column = "SrNo",required = true)
     private int srNo;
     @CsvBindByName(column = "State",required = true)
@@ -12,7 +13,7 @@ public class IndiaStateCodeCsv {
     @CsvBindByName(column = "TIN",required = true)
     private int tin;
     @CsvBindByName(column = "StateCode")
-    private String stateCode;
+    public String stateCode;
 
     @Override
     public String toString() {

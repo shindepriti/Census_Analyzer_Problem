@@ -18,7 +18,7 @@ import java.util.stream.StreamSupport;
 
 public class CensusAnalyzer {
     List<IndiaCensusCsv> censusCsvList = null;
-
+    List<IndiaStateCodeCsv> stateCodeCsv = null;
     public int loadCensusData(String csvFilePath) throws CensusAnalyzerException {
         try {
             Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
@@ -36,8 +36,8 @@ public class CensusAnalyzer {
         try {
             Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
             IcsvBuilder csvBuilder = CsvBuilderFactory.CsvBuilder();
-            censusCsvList = csvBuilder.getCsvFileList(reader,IndiaStateCodeCsv.class);
-            return censusCsvList.size();
+           List<IndiaStateCodeCsv> stateCodeList = csvBuilder.getCsvFileList(reader,IndiaStateCodeCsv.class);
+            return stateCodeList.size();
         } catch (IOException e) {
             throw new CensusAnalyzerException(CensusAnalyzerException.ExceptionType.CSV_FILE_PROBLEM, e.getMessage());
         } catch (RuntimeException e) {
@@ -59,6 +59,14 @@ public class CensusAnalyzer {
         String sortedCensusJson = new Gson().toJson(censusCsvList);
         return sortedCensusJson;
     }
+    public String getStateCodeWiseSortedData(String csvFilePath) throws CensusAnalyzerException {
+        if(censusCsvList.size()==0 ||  censusCsvList==null)
+            throw new CensusAnalyzerException(CensusAnalyzerException.ExceptionType.NO_CENSUS_DATA,"No Data");
+        Comparator<IndiaStateCodeCsv> indiaStateCodeCsvComparator = Comparator.comparing(census -> census.stateCode);
+        this.sorting(indiaStateCodeCsvComparator);
+        String sortedCensusJson = new Gson().toJson(censusCsvList);
+        return sortedCensusJson;
+    }
 
     private void sort(Comparator<IndiaCensusCsv> indiaCensusCsvComparator) {
         for (int i = 0; i < censusCsvList.size()-1; i++){
@@ -68,6 +76,19 @@ public class CensusAnalyzer {
                 if (indiaCensusCsvComparator.compare(census1,census2)>0){
                     censusCsvList.set(j,census2);
                     censusCsvList.set(j+1,census1);
+                }
+            }
+        }
+    }
+
+    private void sorting(Comparator<IndiaStateCodeCsv> indiaStateCodeCsvComparator) {
+        for (int i = 0; i < stateCodeCsv.size()-1; i++){
+            for (int j=0; j < stateCodeCsv.size()-i-1; j++){
+               IndiaStateCodeCsv census1 = stateCodeCsv.get(j);
+               IndiaStateCodeCsv census2 = stateCodeCsv.get(j+1);
+                if (indiaStateCodeCsvComparator.compare(census1,census2)>0){
+                    stateCodeCsv.set(j, census2);
+                    stateCodeCsv.set(j+1,census1);
                 }
             }
         }
