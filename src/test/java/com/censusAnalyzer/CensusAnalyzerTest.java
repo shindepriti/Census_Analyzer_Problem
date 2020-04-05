@@ -22,6 +22,8 @@ public class CensusAnalyzerTest {
     private static final String WRONG_STATE_CODE_FILE_TYPE = "./src/test/resources/IndiaStateCode.json";
     private static final String INCORRECT_STATE_CODE_FILE_PATH = "./src/test/resources/IndiaStateCodeWrongData.csv";
 
+    private static final String US_CENSUS_CSV_FILE_PATH="./src/test/resources/USCensusData.csv";
+
     @Before
     public void init(){
         censusAnalyzer = new CensusAnalyzer();
@@ -184,5 +186,16 @@ public class CensusAnalyzerTest {
         } catch (CensusAnalyzerException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void givenUsCensusData_shouldReturnCorrectData() {
+        try {
+           int numberOfRecord = censusAnalyzer.loadUSCensusData(US_CENSUS_CSV_FILE_PATH);
+            Assert.assertEquals(51,numberOfRecord);
+        } catch (CensusAnalyzerException e) {
+            e.printStackTrace();
+        }
+
     }
 }
