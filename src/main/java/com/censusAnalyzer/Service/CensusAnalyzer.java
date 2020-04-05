@@ -1,22 +1,13 @@
 package com.censusAnalyzer.Service;
 
 import com.censusAnalyzer.Adapter.CensusAdapter;
-import com.censusAnalyzer.Builder.CsvBuilderFactory;
-import com.censusAnalyzer.Builder.IcsvBuilder;
 import com.censusAnalyzer.DAO.CensusDao;
 import com.censusAnalyzer.DTO.IndiaCensusCsv;
-import com.censusAnalyzer.DTO.IndiaStateCodeCsv;
 import com.censusAnalyzer.DTO.UsCensusCsv;
 import com.censusAnalyzer.Exception.CensusAnalyzerException;
 import com.google.gson.Gson;
-
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
-;
-import java.util.stream.StreamSupport;
+import java.util.stream.Collectors;
 
 public class CensusAnalyzer {
     Map<String, CensusDao> censusMap;
@@ -27,28 +18,12 @@ public class CensusAnalyzer {
         censusMap = new HashMap<>();
     }
 
-    public int loadIndiaCensusData(String csvFilePath) throws  CensusAnalyzerException {
-        censusDaoList=new CensusAdapter().loadCensusData(csvFilePath,IndiaCensusCsv.class);
-        return censusDaoList.size();
+    public int loadIndiaCensusData(String... csvFilePath) throws  CensusAnalyzerException {
+        censusMap = new CensusAdapter().loadCensusData(IndiaCensusCsv.class,csvFilePath);
+        censusDaoList = censusMap.values().stream().collect(Collectors.toList());
+        return censusMap.size();
     }
 
-
-    public int loadStateCodeData(String csvFilePath) throws CensusAnalyzerException {
-        try {
-            Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
-            IcsvBuilder csvBuilder = CsvBuilderFactory.CsvBuilder();
-            Iterator<IndiaStateCodeCsv> stateCodeCSVIterator = csvBuilder.getCsvFileIterator(reader, IndiaStateCodeCsv.class);
-            Iterable<IndiaStateCodeCsv> csvIterable = () -> stateCodeCSVIterator;
-            StreamSupport.stream(csvIterable.spliterator(), false)
-                    .filter(csvState -> censusMap.get(csvState.state) != null)
-                    .forEach(csvState -> censusMap.get(csvState.state).stateCode = csvState.stateCode);
-            return censusMap.size();
-        } catch (IOException e) {
-            throw new CensusAnalyzerException(CensusAnalyzerException.ExceptionType.CSV_FILE_PROBLEM, e.getMessage());
-        } catch (RuntimeException e) {
-            throw new CensusAnalyzerException(CensusAnalyzerException.ExceptionType.CSV_TEMPLATE_PROBLEM, e.getMessage());
-        }
-    }
 
     public String getStateWiseSortedCensusData(String csvFilePath) throws CensusAnalyzerException {
         if(censusDaoList.size()==0 || censusDaoList==null)
@@ -109,7 +84,6 @@ public class CensusAnalyzer {
     }
 
     public int loadUSCensusData(String csvFilePath) throws CensusAnalyzerException {
-        censusDaoList = new CensusAdapter().loadCensusData(csvFilePath,UsCensusCsv.class);
-        return censusDaoList.size();
+        return new CensusAdapter().loadCensusData(UsCensusCsv.class,csvFilePath).size();
     }
 }
