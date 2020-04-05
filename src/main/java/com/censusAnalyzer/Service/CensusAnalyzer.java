@@ -1,15 +1,14 @@
 package com.censusAnalyzer.Service;
 
-import com.censusAnalyzer.Adapter.CensusAdapter;
+import com.censusAnalyzer.Adapter.CensusAdapterFactory;
 import com.censusAnalyzer.DAO.CensusDao;
-import com.censusAnalyzer.DTO.IndiaCensusCsv;
-import com.censusAnalyzer.DTO.UsCensusCsv;
 import com.censusAnalyzer.Exception.CensusAnalyzerException;
 import com.google.gson.Gson;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class CensusAnalyzer {
+    public enum Country {INDIA,US}
     Map<String, CensusDao> censusMap;
     List<CensusDao> censusDaoList;
 
@@ -18,12 +17,10 @@ public class CensusAnalyzer {
         censusMap = new HashMap<>();
     }
 
-    public int loadIndiaCensusData(String... csvFilePath) throws  CensusAnalyzerException {
-        censusMap = new CensusAdapter().loadCensusData(IndiaCensusCsv.class,csvFilePath);
-        censusDaoList = censusMap.values().stream().collect(Collectors.toList());
+    public int loadCensusData(Country country,String... csvFilePath) throws  CensusAnalyzerException {
+        censusMap = CensusAdapterFactory.getCensusData(country, csvFilePath);
         return censusMap.size();
     }
-
 
     public String getStateWiseSortedCensusData(String csvFilePath) throws CensusAnalyzerException {
         if(censusDaoList.size()==0 || censusDaoList==null)
@@ -83,7 +80,4 @@ public class CensusAnalyzer {
         }
     }
 
-    public int loadUSCensusData(String csvFilePath) throws CensusAnalyzerException {
-        return new CensusAdapter().loadCensusData(UsCensusCsv.class,csvFilePath).size();
-    }
 }
