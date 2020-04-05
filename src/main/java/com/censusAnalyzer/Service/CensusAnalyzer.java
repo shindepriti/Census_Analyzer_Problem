@@ -90,7 +90,15 @@ public class CensusAnalyzer {
         this.sort(indiaCensusDaoComparator);
         String sortedCensusJson = new Gson().toJson(indiaCensusDtoList);
         return sortedCensusJson;
+    }
 
+    public String getAreaWiseSortedCensusData(String csvFilePath) throws CensusAnalyzerException{
+        if(indiaCensusDtoList.size()==0 || indiaCensusDtoList==null)
+            throw new CensusAnalyzerException(CensusAnalyzerException.ExceptionType.NO_CENSUS_DATA,"No Census Data");
+        Comparator<IndiaCensusDao> indiaCensusDaoComparator = Comparator.comparing(census -> census.areaInSqKm);
+        this.sort(indiaCensusDaoComparator);
+        String sortedCensusJson = new Gson().toJson(indiaCensusDtoList);
+        return sortedCensusJson;
     }
 
     private void sort(Comparator<IndiaCensusDao> indiaCensusCsvComparator) {
