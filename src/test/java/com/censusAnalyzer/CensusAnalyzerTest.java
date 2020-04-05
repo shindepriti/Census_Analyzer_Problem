@@ -1,6 +1,7 @@
 package com.censusAnalyzer;
 
 import com.censusAnalyzer.DTO.IndiaCensusCsv;
+import com.censusAnalyzer.DTO.UsCensusCsv;
 import com.censusAnalyzer.Exception.CensusAnalyzerException;
 import com.censusAnalyzer.Service.CensusAnalyzer;
 import com.google.gson.Gson;
@@ -8,6 +9,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
 
 public class CensusAnalyzerTest {
     private CensusAnalyzer censusAnalyzer;
@@ -195,6 +197,29 @@ public class CensusAnalyzerTest {
         } catch (CensusAnalyzerException e) {
             e.printStackTrace();
         }
+    }
 
+    @Test
+    public void givenUsCensusData_whenSorted_shouldReturnResult() {
+        try {
+            censusAnalyzer.loadUSCensusData(US_CENSUS_CSV_FILE_PATH);
+            String sortedCensusData = censusAnalyzer.getUsStateSortedCensusData(US_CENSUS_CSV_FILE_PATH);
+            UsCensusCsv[] censusCsv = new Gson().fromJson(sortedCensusData,UsCensusCsv[].class);
+            Assert.assertEquals("Alabama",censusCsv[0].state);
+        } catch (CensusAnalyzerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenUsCensusData_whenSorted_shouldReturnLastResult() {
+        try {
+            censusAnalyzer.loadUSCensusData(US_CENSUS_CSV_FILE_PATH);
+            String sortedCensusData = censusAnalyzer.getUsStateSortedCensusData(US_CENSUS_CSV_FILE_PATH);
+            UsCensusCsv[] censusCsv = new Gson().fromJson(sortedCensusData,UsCensusCsv[].class);
+            Assert.assertEquals("Wyoming",censusCsv[50].state);
+        } catch (CensusAnalyzerException e) {
+            e.printStackTrace();
+        }
     }
 }

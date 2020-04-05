@@ -9,7 +9,6 @@ import com.censusAnalyzer.DTO.UsCensusCsv;
 import com.censusAnalyzer.Exception.CensusAnalyzerException;
 import com.google.gson.Gson;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
@@ -109,6 +108,15 @@ public class CensusAnalyzer {
         return sortedCensusJson;
     }
 
+    public String getUsStateSortedCensusData(String csvFilePath) throws CensusAnalyzerException {
+        if(censusDaoList.size()==0 || censusDaoList==null)
+            throw new CensusAnalyzerException(CensusAnalyzerException.ExceptionType.NO_CENSUS_DATA,"No Census Data");
+        Comparator<CensusDao> censusDaoComparator = Comparator.comparing(census -> census.state);
+        this.sort(censusDaoComparator);
+        String sortedCensusJson = new Gson().toJson(censusDaoList);
+        return sortedCensusJson;
+    }
+
     private void sort(Comparator<CensusDao> indiaCensusCsvComparator) {
         for (int i = 0; i < censusDaoList.size()-1; i++) {
             for (int j = 0; j < censusDaoList.size() - i - 1; j++) {
@@ -125,6 +133,4 @@ public class CensusAnalyzer {
     public int loadUSCensusData(String csvFilePath) throws CensusAnalyzerException {
         return this.loadCensusData(csvFilePath,UsCensusCsv.class);
     }
-
-
 }
