@@ -45,5 +45,4 @@ public class UsCensusCsv {
                 ", housingDensity=" + housingDensity +
                 '}';
     }
-
 }

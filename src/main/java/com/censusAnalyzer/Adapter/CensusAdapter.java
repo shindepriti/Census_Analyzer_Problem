@@ -21,9 +21,9 @@ public abstract class CensusAdapter {
 
     Map<String, CensusDao> censusMap;
 
-    public abstract Map<String,CensusDao> loadCensusData(String... csvFilePath) throws CensusAnalyzerException;
+    public abstract Map<String, CensusDao> loadCensusData(String... csvFilePath) throws CensusAnalyzerException;
 
-    public <E> Map<String, CensusDao> loadCensusData(Class<E> censusCsvClass,String... csvFilePath ) throws CensusAnalyzerException {
+    public <E> Map<String, CensusDao> loadCensusData(Class<E> censusCsvClass, String... csvFilePath) throws CensusAnalyzerException {
         try {
             Reader reader = Files.newBufferedReader(Paths.get(csvFilePath[0]));
             IcsvBuilder icsvBuilder = CsvBuilderFactory.CsvBuilder();
@@ -33,22 +33,16 @@ public abstract class CensusAdapter {
                 StreamSupport.stream(csvIterable.spliterator(), false)
                         .map(IndiaCensusCsv.class::cast)
                         .forEach(censusCsv -> censusMap.put(censusCsv.state, new CensusDao(censusCsv)));
-            }
-            else if (censusCsvClass.getName().equals("com.censusAnalyzer.DTO.UsCensusCsv")) {
+            } else if (censusCsvClass.getName().equals("com.censusAnalyzer.DTO.UsCensusCsv")) {
                 StreamSupport.stream(csvIterable.spliterator(), false)
                         .map(UsCensusCsv.class::cast)
                         .forEach(censusCsv -> censusMap.put(censusCsv.state, new CensusDao(censusCsv)));
             }
-             return censusMap;
+            return censusMap;
         } catch (IOException e) {
             throw new CensusAnalyzerException(CensusAnalyzerException.ExceptionType.CSV_FILE_PROBLEM, e.getMessage());
-        }catch (RuntimeException e) {
-            throw new CensusAnalyzerException(CensusAnalyzerException.ExceptionType.CSV_TEMPLATE_PROBLEM,e.getMessage());
+        } catch (RuntimeException e) {
+            throw new CensusAnalyzerException(CensusAnalyzerException.ExceptionType.CSV_TEMPLATE_PROBLEM, e.getMessage());
         }
     }
-
-
-
-
-
 }

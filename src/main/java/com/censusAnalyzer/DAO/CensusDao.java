@@ -3,7 +3,6 @@ package com.censusAnalyzer.DAO;
 import com.censusAnalyzer.DTO.IndiaCensusCsv;
 import com.censusAnalyzer.DTO.UsCensusCsv;
 import com.censusAnalyzer.Service.CensusAnalyzer;
-
 import java.util.Comparator;
 
 public class CensusDao {
@@ -11,7 +10,7 @@ public class CensusDao {
     public String state;
     public double population;
     public double totalArea;
-    public double totalDensity;
+    public static double totalDensity;
     public String  stateCode;
     public double populationDensity;
 
@@ -34,9 +33,9 @@ public class CensusDao {
         if (mode.equals(CensusAnalyzer.SortingMode.STATE))
             return Comparator.comparing(census -> census.state);
         else if (mode.equals(CensusAnalyzer.SortingMode.POPULATION))
-            return Comparator.comparing(census -> census.population);
+            return Comparator.comparing(CensusDao::getPopulation).reversed();
         else if (mode.equals(CensusAnalyzer.SortingMode.DENSITY))
-            return Comparator.comparing(census -> census.totalDensity);
+            return Comparator.comparing(CensusDao::getPopulationDensity).reversed();
         else if (mode.equals(CensusAnalyzer.SortingMode.AREA))
             return Comparator.comparing(census -> census.totalArea);
         return null;
@@ -49,4 +48,13 @@ public class CensusDao {
             return new UsCensusCsv(state,stateCode,population,totalArea,totalDensity);
         return null;
     }
+
+    public double getPopulation() {
+        return population;
+    }
+
+    public double getPopulationDensity() {
+        return totalDensity;
+    }
+
 }
