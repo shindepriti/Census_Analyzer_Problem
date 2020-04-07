@@ -31,7 +31,7 @@ public class CensusAnalyzerTest {
             int numberOfRecord = censusAnalyzer.loadCensusData(CensusAnalyzer.Country.INDIA,INDIA_CENSUS_CSV_FILE_PATH);
             Assert.assertEquals(29,numberOfRecord);
         } catch (CensusAnalyzerException e) {
-            e.printStackTrace();
+            Assert.assertEquals(CensusAnalyzerException.ExceptionType.CSV_TEMPLATE_PROBLEM,e.type);
         }
     }
 
@@ -86,7 +86,7 @@ public class CensusAnalyzerTest {
            int numberOfRecord =censusAnalyzer.loadCensusData(CensusAnalyzer.Country.INDIA,INDIA_STATE_CODE_FILE_PATH);
            Assert.assertEquals(29,numberOfRecord);
         } catch (CensusAnalyzerException  e) {
-            e.printStackTrace();
+            Assert.assertEquals(CensusAnalyzerException.ExceptionType.CSV_TEMPLATE_PROBLEM,e.type);
         }
     }
 
@@ -139,7 +139,7 @@ public class CensusAnalyzerTest {
             IndiaCensusCsv[] censusCsv = new Gson().fromJson(sortedCensusData,IndiaCensusCsv[].class);
             Assert.assertEquals("Andhra Pradesh",censusCsv[0].state);
         } catch (CensusAnalyzerException  e) {
-            e.printStackTrace();
+            Assert.assertEquals(CensusAnalyzerException.ExceptionType.CSV_TEMPLATE_PROBLEM,e.type);
         }
 
     }
@@ -153,7 +153,7 @@ public class CensusAnalyzerTest {
             IndiaCensusCsv[] censusCsv = new Gson().fromJson(sortedCensusData,IndiaCensusCsv[].class);
             Assert.assertEquals("West Bengal",censusCsv[28].state);
         } catch (CensusAnalyzerException  e) {
-            e.printStackTrace();
+            Assert.assertEquals(CensusAnalyzerException.ExceptionType.CSV_TEMPLATE_PROBLEM,e.type);
         }
     }
 
@@ -166,7 +166,7 @@ public class CensusAnalyzerTest {
             IndiaCensusCsv[] censusCsv = new Gson().fromJson(sortedCensusData,IndiaCensusCsv[].class);
             Assert.assertNotEquals("Andra Prades",censusCsv[1].state);
         } catch (CensusAnalyzerException  e) {
-            e.printStackTrace();
+            Assert.assertEquals(CensusAnalyzerException.ExceptionType.CSV_TEMPLATE_PROBLEM,e.type);
         }
     }
     @Test
@@ -178,7 +178,7 @@ public class CensusAnalyzerTest {
             IndiaCensusCsv[] censusCsv = new Gson().fromJson(sortedCensusData,IndiaCensusCsv[].class);
             Assert.assertEquals("Uttar Pradesh",censusCsv[0].state);
         } catch (CensusAnalyzerException  e) {
-            e.printStackTrace();
+            Assert.assertEquals(CensusAnalyzerException.ExceptionType.CSV_TEMPLATE_PROBLEM,e.type);
         }
     }
     @Test
@@ -190,7 +190,7 @@ public class CensusAnalyzerTest {
             IndiaCensusCsv[] censusCsv = new Gson().fromJson(sortedCensusData,IndiaCensusCsv[].class);
             Assert.assertNotEquals("Bihar",censusCsv[4].state);
         } catch (CensusAnalyzerException  e) {
-            e.printStackTrace();
+            Assert.assertEquals(CensusAnalyzerException.ExceptionType.CSV_TEMPLATE_PROBLEM,e.type);
         }
     }
 
@@ -203,7 +203,7 @@ public class CensusAnalyzerTest {
             IndiaCensusCsv[] censusCsv = new Gson().fromJson(sortedCensusData,IndiaCensusCsv[].class);
             Assert.assertEquals("West Bengal",censusCsv[1].state);
         } catch (CensusAnalyzerException e) {
-            e.printStackTrace();
+            Assert.assertEquals(CensusAnalyzerException.ExceptionType.CSV_TEMPLATE_PROBLEM,e.type);
         }
     }
 
@@ -216,7 +216,7 @@ public class CensusAnalyzerTest {
             IndiaCensusCsv[] censusCsv = new Gson().fromJson(sortedCensusData,IndiaCensusCsv[].class);
             Assert.assertEquals("Rajasthan",censusCsv[0].state);
         } catch (CensusAnalyzerException e) {
-            e.printStackTrace();
+            Assert.assertEquals(CensusAnalyzerException.ExceptionType.CSV_TEMPLATE_PROBLEM,e.type);
         }
     }
 
@@ -227,7 +227,7 @@ public class CensusAnalyzerTest {
            int numberOfRecord = censusAnalyzer.loadCensusData(CensusAnalyzer.Country.US,US_CENSUS_CSV_FILE_PATH);
             Assert.assertEquals(51,numberOfRecord);
         } catch (CensusAnalyzerException e) {
-            e.printStackTrace();
+            Assert.assertEquals(CensusAnalyzerException.ExceptionType.CSV_TEMPLATE_PROBLEM,e.type);
         }
     }
 
@@ -240,7 +240,7 @@ public class CensusAnalyzerTest {
             UsCensusCsv[] censusCsv = new Gson().fromJson(sortedCensusData,UsCensusCsv[].class);
             Assert.assertEquals("Alabama",censusCsv[0].state);
         } catch (CensusAnalyzerException e) {
-            e.printStackTrace();
+            Assert.assertEquals(CensusAnalyzerException.ExceptionType.CSV_TEMPLATE_PROBLEM,e.type);
         }
     }
 
@@ -253,7 +253,7 @@ public class CensusAnalyzerTest {
             UsCensusCsv[] censusCsv = new Gson().fromJson(sortedCensusData,UsCensusCsv[].class);
             Assert.assertEquals("Wyoming",censusCsv[50].state);
         } catch (CensusAnalyzerException e) {
-            e.printStackTrace();
+            Assert.assertEquals(CensusAnalyzerException.ExceptionType.CSV_TEMPLATE_PROBLEM,e.type);
         }
     }
 
@@ -264,9 +264,9 @@ public class CensusAnalyzerTest {
             censusAnalyzer.loadCensusData(CensusAnalyzer.Country.US,US_CENSUS_CSV_FILE_PATH);
             String sortedCensusData = censusAnalyzer.getDualSortByPopulationDensity();
             UsCensusCsv[] censusCsv = new Gson().fromJson(sortedCensusData,UsCensusCsv[].class);
-            Assert.assertEquals("Califonia",censusCsv[0].stateId);
+            Assert.assertEquals("California",censusCsv[0].state);
         } catch (CensusAnalyzerException e) {
-            e.printStackTrace();
+            Assert.assertEquals(CensusAnalyzerException.ExceptionType.CSV_TEMPLATE_PROBLEM,e.type);
         }
     }
 }
